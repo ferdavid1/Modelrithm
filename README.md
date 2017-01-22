@@ -8,3 +8,7 @@ pip install Modelrithm
 sklearn
 matplotlib
 numpy
+
+# Usage
+from Modelrithm import Modelrithm
+Modelrithm.Classification(X_train, Y_train, X_test, Y_train)
