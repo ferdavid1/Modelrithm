@@ -1,5 +1,5 @@
 # Modelrithm
-Chooses the best ML algorithm for your data
+Python Framework that chooses the best ML algorithm for your data
 
 # Installation
 pip install Modelrithm
