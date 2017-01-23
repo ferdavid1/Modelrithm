@@ -1,0 +1,7 @@
+setup.py
+Modelrithm/__init__.py
+Modelrithm.egg-info/PKG-INFO
+Modelrithm.egg-info/SOURCES.txt
+Modelrithm.egg-info/dependency_links.txt
+Modelrithm.egg-info/not-zip-safe
+Modelrithm.egg-info/top_level.txt
