@@ -74,9 +74,10 @@ def train(training_path_a, training_path_b):
     # print("Accuracy: {}".format(accuracy_score(y_test, clf.predict(x_test))))
     # print("Precision: {}".format(precision_score(y_test, clf.predict(x_test))))
     # print("F-beta Score: {}".format(fbeta_score(y_test, clf.predict(x_test), beta=0.1)))
-    print(Modelrithm.Classification(x_train, x_test, y_train, y_test))
+    m = Modelrithm(x_train, x_test, y_train, y_test)
+    print(m.Classification())
 
-    return clf
+    # return clf
 
 
 train('images/earth', 'images/mars')

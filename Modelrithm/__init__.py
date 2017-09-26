@@ -14,37 +14,43 @@ import threading
 exitFlag = 0
 class CThread(threading.Thread):
 
-	def __init__(self, threadID, name, Xtrain, Xtest, Ytrain, Ytest):
+	def __init__(self, threadID, name, function):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
 		self.name = name
-		self.Xtrain, self.Xtest, self.Ytrain, self.Ytest = Xtrain, Xtest, Ytrain, Ytest
+		# self.function = function
+		# self.Xtrain, self.Xtest, self.Ytrain, self.Ytest = Xtrain, Xtest, Ytrain, Ytest
 
 	def run(self):
-		print("Starting {} Classifier in a new thread...".format(self.name))
+		# Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		print("Starting {} Classifier in a new thread...".format(str(self.name)))
 		# Get lock to synchronize threads
-		algo = self.name
 		threadLock.acquire()
-		c = Modelrithm()
-		cl = c.Classification(self.Xtrain, self.Xtest, self.Ytrain, self.Ytest)
-		cl.algo
+		self.function
 		threadLock.release()
-		print("Exiting thread for Classifier: {}".format(self.name))
+		print("Exiting thread for Classifier: {}".format(str(self.name)))
 
 threadLock = threading.Lock()
 threads = []
 
-class Modelrithm:
+class Modelrithm(object):
 
-	def __init__(self):
+	def __init__(self, Xtrain, Xtest, Ytrain, Ytest):
 		self.algtypes = ['Regression', "Classification"]
+		self.Xtrain, self.Xtest, self.Ytrain, self.Ytest = Xtrain, Xtest, Ytrain, Ytest
+		self.accuracy = []
+		self.precision = []
+		self.fbeta= []
+		self.classifiernames = ['SupportVectorClassifier', 'KNeighborsClassifier', \
+		'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'GaussianNaiveBayes',\
+		'LogisticRegression']
 
-
-	def Classification(Xtrain, Xtest, Ytrain, Ytest):
-		classifiernames = ['SupportVectorClassifier', 'KNeighborsClassifier', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'GaussianNaiveBayes', 'LogisticRegression']
-		accuracy = []
-		precision = []
-		fbeta= []
+	def Classification(self):
+		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		accuracy = self.accuracy
+		precision = self.precision
+		fbeta = self.fbeta
+		classifiernames = self.classifiernames
 
 		def Support():
 			svc = SVC()
@@ -95,31 +101,62 @@ class Modelrithm:
 			precision.append(precision_score(Ytest, lr.predict(Xtest)))
 			fbeta.append(fbeta_score(Ytest, lr.predict(Xtest), beta=1))
 
-		CL = {}
-		for ind, x in enumerate(classifiernames):
-			CL[ind] = x
-		prompt = input("Please choose which classifiers you wish to compare. \nThe options are: \n{}".format(CL) + "\nPlease input the indices of the algorithms you want, separated by commas, and with no spaces: ")
-		chosen = ",".join(prompt)
-		available = [Support(), KNearest(), DecisionTree(), RandomForest(), Ada(), GNB(), LogReg()]
-		final_choice = [available[c] for c in chosen]
-		for ind, f in enumerate(final_choice)
-			CThread(ind, final_choice[f], Xtrain, Xtest, Ytrain, Ytest).start()
-		for ind, f in enumerate(final_choice):
-			threads.append(CThread(ind, final_choice[f], Xtrain, Xtest, Ytrain, Ytest))
+		self.parallel()
+		self.results()
+
+	def parallel(self):
+		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		classifiernames = self.classifiernames
+
+		svmthread = CThread(1, classifiernames[0], self.Classification().Support())
+		knthread = CThread(2, classifiernames[1], self.Classification().KNearest())
+		dtthread = CThread(3, classifiernames[2], self.Classification().DecisionTree())
+		rfthread = CThread(4, classifiernames[3], self.Classification().RandomForest())
+		adathread = CThread(5, classifiernames[4], self.Classification().Ada())
+		gnbthread = CThread(6, classifiernames[5], self.Classification().GNB())
+		lrthread = CThread(7, classifiernames[6], self.Classification().LogReg())
+
+		threads.append(svmthread)
+		threads.append(knthread)
+		threads.append(dtthread)
+		threads.append(rfthread)
+		threads.append(adathread)
+		threads.append(gnbthread)
+		threads.append(lrthread)
+
+		for t in threads:
+			t.start()
 		for t in threads:
 			t.join()
 		print("Exiting Main Thread...")
-		plt.plot(accuracy)
-		plt.show()
+
+	def results(self):
+		accuracy = self.accuracy
+		precision = self.precision
+		fbeta = self.fbeta
 
 		#accuracy.sort()
-		#mostaccurate = accuracy[0]
+		# mostaccurate = accuracy[0]
 		accuracy_dict = {"SVC":accuracy[0], "KNeighborsClassifier": accuracy[1], 'DecisionTreeClassifier':accuracy[2], 'RandomForestClassifier':accuracy[3], 'AdaBoostClassifier':accuracy[4], 'GaussianNB':accuracy[5], 'LogisticRegression':accuracy[6]}
+		plt.fig()
+		plt.title("Accuracy per Classifier")
+		plt.plot(list(accuracy_dict.keys()), accuracy)
+		plt.show()
+
 		precision_dict = {"SVC":precision[0], "KNeighborsClassifier": precision[1], 'DecisionTreeClassifier':precision[2], 'RandomForestClassifier':precision[3], 'AdaBoostClassifier':precision[4], 'GaussianNB':precision[5], 'LogisticRegression': precision[6]}
+		plt.fig()
+		plt.title("Precision per Classifier")
+		plt.plot(list(precision_dict.keys()), precision)
+		plt.show()
+
 		fbeta_dict = {"SVC": fbeta[0], "KNeighborsClassifier": fbeta[1], 'DecisionTreeClassifier':fbeta[2], 'RandomForestClassifier': fbeta[3], 'AdaBoostClassifier':fbeta[4], 'GaussianNB':fbeta[5], 'LogisticRegression':fbeta[6]}
+		plt.fig()
+		plt.title("F-Beta per Classifier")
+		plt.plot(list(fbeta_dict.keys()), fbeta)
+		plt.show()
+
 		print("*****")
 		print("\nThe accuracy of each model is: \n{}\n".format(accuracy_dict))
 		print("The precision of each model is: \n{}\n".format(precision_dict))
 		print("The F-beta score of each model is: \n{}\n".format(fbeta_dict))
 		print("*****")
-		return accuracy
