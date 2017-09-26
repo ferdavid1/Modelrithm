@@ -10,9 +10,9 @@ pip install Modelrithm
 - numpy
 
 # Usage
-from Modelrithm import Modelrithm
+	from Modelrithm import Modelrithm
 
-Modelrithm.Classification(X_test, Y_train, X_test, Y_train)
+	Modelrithm.Classification(X_test, Y_train, X_test, Y_train)
 
 # Examples
 Aided in increasing accuracy, precision, and f-beta score of a classification problem using satellite pictures of the earth and moon.
