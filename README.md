@@ -22,5 +22,6 @@ pip install Modelrithm
 # Accolades
 Winner, Lockheed Martin Aerospace Challenge - SBHacks 2017
 
-#TODO
-Hyperparameter optimization by Random Search (not Grid Search, takes too long).
+# TODO
+- Hyperparameter optimization by Random Search (not Grid Search, takes too long).
+- Add XGBoost

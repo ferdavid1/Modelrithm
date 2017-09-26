@@ -1,4 +1,5 @@
 # from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso, ElasticNet, BayesianRidge, Perceptron, SGDRegressor
+from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC#, SVR
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -9,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 # from classifier_threading import CThread
 import threading
-print('test')
+
 exitFlag = 0
 class CThread(threading.Thread):
 
@@ -97,11 +98,11 @@ class Modelrithm:
 		CL = {}
 		for ind, x in enumerate(classifiernames):
 			CL[ind] = x
-		prompt = input("Please choose which classifiers you wish to compare. \nThe options are: \n{}".format(classifiernames) + "\nPlease input the indices of the algorithms you want, separated by commas, and with no spaces.")
+		prompt = input("Please choose which classifiers you wish to compare. \nThe options are: \n{}".format(CL) + "\nPlease input the indices of the algorithms you want, separated by commas, and with no spaces: ")
 		chosen = ",".join(prompt)
-		available = [Support(), KNearest(), DecisionTree(), RandomForest(), Ada(), GaussianNaiveBayes(), LogReg()]
+		available = [Support(), KNearest(), DecisionTree(), RandomForest(), Ada(), GNB(), LogReg()]
 		final_choice = [available[c] for c in chosen]
-		for ind, f in enumerate(final_choice):
+		for ind, f in enumerate(final_choice)
 			CThread(ind, final_choice[f], Xtrain, Xtest, Ytrain, Ytest).start()
 		for ind, f in enumerate(final_choice):
 			threads.append(CThread(ind, final_choice[f], Xtrain, Xtest, Ytrain, Ytest))
