@@ -7,7 +7,31 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, precision_score, fbeta_score
 import matplotlib.pyplot as plt
 import numpy as np
-from classifier_threading import CThread
+# from classifier_threading import CThread
+import threading
+
+exitFlag = 0
+class CThread(threading.Thread):
+
+	def __init__(self, threadID, name, Xtrain, Xtest, Ytrain, Ytest):
+		threading.Thread.__init__(self)
+		self.threadID = threadID
+		self.name = name
+		self.Xtrain, self.Xtest, self.Ytrain, self.Ytest = Xtrain, Xtest, Ytrain, Ytest
+
+	def run(self):
+		print("Starting {} Classifier in a new thread...".format(self.name))
+		# Get lock to synchronize threads
+		algo = self.name
+		threadLock.acquire()
+		c = Modelrithm()
+		cl = c.Classification(self.Xtrain, self.Xtest, self.Ytrain, self.Ytest)
+		cl.algo
+		threadLock.release()
+		print("Exiting thread for Classifier: {}".format(self.name))
+
+threadLock = threading.Lock()
+threads = []
 
 class Modelrithm:
 
@@ -16,68 +40,71 @@ class Modelrithm:
 
 
 	def Classification(Xtrain, Xtest, Ytrain, Ytest):
-		classifiernames = ['SVC', 'KNeighborsClassifier', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'GaussianNB', 'LogisticRegression']
-		callclassifiers = []
+		classifiernames = ['SupportVectorClassifier', 'KNeighborsClassifier', 'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'GaussianNaiveBayes', 'LogisticRegression']
 		accuracy = []
 		precision = []
 		fbeta= []
 
-		print("-------------------------------------------------------------------\n")
-		print("Testing your data on the following models: {}".format(callclassifiers))
-		print("\n-------------------------------------------------------------------\n")
-		print("This may take a while, make yourself comfortable...\n")
+		def Support():
+			svc = SVC()
+			svc.fit(Xtrain, Ytrain)
+			accuracy.append(accuracy_score(Ytest, svc.predict(Xtest)))
+			precision.append(precision_score(Ytest, svc.predict(Xtest)))
+			fbeta.append(fbeta_score(Ytest, svc.predict(Xtest), beta=1))
 
-		svcthread = CThread(1, "SVC_Thread", 1)
-		knnthread = CThread(2, "KNN_Thread", 2)
-		dtthread = CThread(3, "DecisionTree_Thread", 3)
-		rfthread = CThread(4, "RandomForest_Thread", 4)
-		adathread = CThread(5, "Adaboost_Thread", 5)
-		gnbthread = CThread(6, "GaussianNB_Thread", 6)
-		lrthread = CThread(7, "LogReg_Thread", 7)
+		def KNearest():
+			knn = KNeighborsClassifier()
+			knn.fit(Xtrain, Ytrain)
+			accuracy.append(accuracy_score(Ytest, knn.predict(Xtest)))
+			precision.append(precision_score(Ytest, knn.predict(Xtest)))
+			fbeta.append(fbeta_score(Ytest, knn.predict(Xtest), beta=1))
 
-		svc = SVC()
-		svc.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, svc.predict(Xtest)))
-		precision.append(precision_score(Ytest, svc.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, svc.predict(Xtest), beta=1))
+		def DecisionTree():
+			dt = DecisionTreeClassifier()
+			dt.fit(Xtrain, Ytrain)
+			accuracy.append(accuracy_score(Ytest, dt.predict(Xtest)))
+			precision.append(precision_score(Ytest, dt.predict(Xtest)))
+			fbeta.append(fbeta_score(Ytest, dt.predict(Xtest), beta=1))
 
-		knn = KNeighborsClassifier()
-		knn.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, knn.predict(Xtest)))
-		precision.append(precision_score(Ytest, knn.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, knn.predict(Xtest), beta=1))
+		def RandomForest():
+			rf = RandomForestClassifier()
+			rf.fit(Xtrain, Ytrain)
+			accuracy.append(accuracy_score(Ytest, rf.predict(Xtest)))
+			precision.append(precision_score(Ytest, rf.predict(Xtest)))
+			fbeta.append(fbeta_score(Ytest, rf.predict(Xtest), beta=1))
 
-		dt = DecisionTreeClassifier()
-		dt.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, dt.predict(Xtest)))
-		precision.append(precision_score(Ytest, dt.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, dt.predict(Xtest), beta=1))
+		def Ada():
+			adaboost = AdaBoostClassifier()
+			adaboost.fit(Xtrain, Ytrain)
+			accuracy.append(accuracy_score(Ytest, adaboost.predict(Xtest)))
+			precision.append(precision_score(Ytest, adaboost.predict(Xtest)))
+			fbeta.append(fbeta_score(Ytest, adaboost.predict(Xtest), beta=1))
 
-		rf = RandomForestClassifier()
-		rf.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, rf.predict(Xtest)))
-		precision.append(precision_score(Ytest, rf.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, rf.predict(Xtest), beta=1))
+		def GNB():
+			gauss_nb = GaussianNB()
+			gauss_nb.fit(Xtrain, Ytrain)
+			accuracy.append(accuracy_score(Ytest, gauss_nb.predict(Xtest)))
+			precision.append(precision_score(Ytest, gauss_nb.predict(Xtest)))
+			fbeta.append(fbeta_score(Ytest, gauss_nb.predict(Xtest), beta=1))
 
-		adaboost = AdaBoostClassifier()
-		adaboost.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, adaboost.predict(Xtest)))
-		precision.append(precision_score(Ytest, adaboost.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, adaboost.predict(Xtest), beta=1))
+		def LogReg():
+			lr = LogisticRegression()
+			lr.fit(Xtrain, Ytrain)
+			accuracy.append(accuracy_score(Ytest, lr.predict(Xtest)))
+			precision.append(precision_score(Ytest, lr.predict(Xtest)))
+			fbeta.append(fbeta_score(Ytest, lr.predict(Xtest), beta=1))
 
-		gauss_nb = GaussianNB()
-		gauss_nb.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, gauss_nb.predict(Xtest)))
-		precision.append(precision_score(Ytest, gauss_nb.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, gauss_nb.predict(Xtest), beta=1))
-
-		lr = LogisticRegression()
-		lr.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, lr.predict(Xtest)))
-		precision.append(precision_score(Ytest, lr.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, lr.predict(Xtest), beta=1))
-
-
+		CL = {}
+		for ind, x in enumerate(classifiernames):
+			CL[ind] = x
+		prompt = input("Please choose which classifiers you wish to compare. \nThe options are: \n{}".format(classifiernames) + "\nPlease input the indices of the algorithms you want, separated by commas, and with no spaces.")
+		chosen = ",".join(prompt)
+		available = [Support(), KNearest(), DecisionTree(), RandomForest(), Ada(), GaussianNaiveBayes(), LogReg()]
+		final_choice = [available[c] for c in chosen]
+		for ind, f in enumerate(final_choice):
+			CThread(ind, final_choice[f], Xtrain, Xtest, Ytrain, Ytest).start()
+		for ind, f in enumerate(final_choice):
+			threads.append(CThread(ind, final_choice[f], Xtrain, Xtest, Ytrain, Ytest))
 		plt.plot(accuracy)
 		plt.show()
 
@@ -92,4 +119,3 @@ class Modelrithm:
 		print("The F-beta score of each model is: \n{}\n".format(fbeta_dict))
 		print("*****")
 		return accuracy
-
