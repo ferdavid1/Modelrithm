@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 # from classifier_threading import CThread
 import threading
-
+print('test')
 exitFlag = 0
 class CThread(threading.Thread):
 
@@ -105,6 +105,9 @@ class Modelrithm:
 			CThread(ind, final_choice[f], Xtrain, Xtest, Ytrain, Ytest).start()
 		for ind, f in enumerate(final_choice):
 			threads.append(CThread(ind, final_choice[f], Xtrain, Xtest, Ytrain, Ytest))
+		for t in threads:
+			t.join()
+		print("Exiting Main Thread...")
 		plt.plot(accuracy)
 		plt.show()
 
