@@ -75,7 +75,7 @@ def train(training_path_a, training_path_b):
     # print("Precision: {}".format(precision_score(y_test, clf.predict(x_test))))
     # print("F-beta Score: {}".format(fbeta_score(y_test, clf.predict(x_test), beta=0.1)))
     m = Modelrithm(x_train, x_test, y_train, y_test)
-    print(m.Classification())
+    m.Classification()
 
     # return clf
 

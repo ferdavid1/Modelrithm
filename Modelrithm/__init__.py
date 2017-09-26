@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 # from classifier_threading import CThread
 import threading
+import time
 
 exitFlag = 0
 class CThread(threading.Thread):
@@ -18,15 +19,14 @@ class CThread(threading.Thread):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
 		self.name = name
-		# self.function = function
-		# self.Xtrain, self.Xtest, self.Ytrain, self.Ytest = Xtrain, Xtest, Ytrain, Ytest
+		self.function = function
 
 	def run(self):
-		# Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
 		print("Starting {} Classifier in a new thread...".format(str(self.name)))
 		# Get lock to synchronize threads
 		threadLock.acquire()
 		self.function
+		# Free lock to release next thread
 		threadLock.release()
 		print("Exiting thread for Classifier: {}".format(str(self.name)))
 
@@ -45,76 +45,94 @@ class Modelrithm(object):
 		'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier', 'GaussianNaiveBayes',\
 		'LogisticRegression']
 
-	def Classification(self):
+	def Support(self):
 		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
 		accuracy = self.accuracy
 		precision = self.precision
 		fbeta = self.fbeta
-		classifiernames = self.classifiernames
+		svc = SVC()
+		svc.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, svc.predict(Xtest)))
+		precision.append(precision_score(Ytest, svc.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, svc.predict(Xtest), beta=1))
 
-		def Support():
-			svc = SVC()
-			svc.fit(Xtrain, Ytrain)
-			accuracy.append(accuracy_score(Ytest, svc.predict(Xtest)))
-			precision.append(precision_score(Ytest, svc.predict(Xtest)))
-			fbeta.append(fbeta_score(Ytest, svc.predict(Xtest), beta=1))
+	def KNearest(self):
+		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		accuracy = self.accuracy
+		precision = self.precision
+		fbeta = self.fbeta
+		knn = KNeighborsClassifier()
+		knn.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, knn.predict(Xtest)))
+		precision.append(precision_score(Ytest, knn.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, knn.predict(Xtest), beta=1))
 
-		def KNearest():
-			knn = KNeighborsClassifier()
-			knn.fit(Xtrain, Ytrain)
-			accuracy.append(accuracy_score(Ytest, knn.predict(Xtest)))
-			precision.append(precision_score(Ytest, knn.predict(Xtest)))
-			fbeta.append(fbeta_score(Ytest, knn.predict(Xtest), beta=1))
+	def DecisionTree(self):
+		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		accuracy = self.accuracy
+		precision = self.precision
+		fbeta = self.fbeta			
+		dt = DecisionTreeClassifier()
+		dt.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, dt.predict(Xtest)))
+		precision.append(precision_score(Ytest, dt.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, dt.predict(Xtest), beta=1))
 
-		def DecisionTree():
-			dt = DecisionTreeClassifier()
-			dt.fit(Xtrain, Ytrain)
-			accuracy.append(accuracy_score(Ytest, dt.predict(Xtest)))
-			precision.append(precision_score(Ytest, dt.predict(Xtest)))
-			fbeta.append(fbeta_score(Ytest, dt.predict(Xtest), beta=1))
+	def RandomForest(self):
+		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		accuracy = self.accuracy
+		precision = self.precision
+		fbeta = self.fbeta
+		rf = RandomForestClassifier()
+		rf.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, rf.predict(Xtest)))
+		precision.append(precision_score(Ytest, rf.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, rf.predict(Xtest), beta=1))
 
-		def RandomForest():
-			rf = RandomForestClassifier()
-			rf.fit(Xtrain, Ytrain)
-			accuracy.append(accuracy_score(Ytest, rf.predict(Xtest)))
-			precision.append(precision_score(Ytest, rf.predict(Xtest)))
-			fbeta.append(fbeta_score(Ytest, rf.predict(Xtest), beta=1))
+	def Ada(self):
+		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		accuracy = self.accuracy
+		precision = self.precision
+		fbeta = self.fbeta
+		adaboost = AdaBoostClassifier()
+		adaboost.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, adaboost.predict(Xtest)))
+		precision.append(precision_score(Ytest, adaboost.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, adaboost.predict(Xtest), beta=1))
 
-		def Ada():
-			adaboost = AdaBoostClassifier()
-			adaboost.fit(Xtrain, Ytrain)
-			accuracy.append(accuracy_score(Ytest, adaboost.predict(Xtest)))
-			precision.append(precision_score(Ytest, adaboost.predict(Xtest)))
-			fbeta.append(fbeta_score(Ytest, adaboost.predict(Xtest), beta=1))
+	def GNB(self):
+		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		accuracy = self.accuracy
+		precision = self.precision
+		fbeta = self.fbeta
+		gauss_nb = GaussianNB()
+		gauss_nb.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, gauss_nb.predict(Xtest)))
+		precision.append(precision_score(Ytest, gauss_nb.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, gauss_nb.predict(Xtest), beta=1))
 
-		def GNB():
-			gauss_nb = GaussianNB()
-			gauss_nb.fit(Xtrain, Ytrain)
-			accuracy.append(accuracy_score(Ytest, gauss_nb.predict(Xtest)))
-			precision.append(precision_score(Ytest, gauss_nb.predict(Xtest)))
-			fbeta.append(fbeta_score(Ytest, gauss_nb.predict(Xtest), beta=1))
+	def LogReg(self):
+		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
+		accuracy = self.accuracy
+		precision = self.precision
+		fbeta = self.fbeta
+		lr = LogisticRegression()
+		lr.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, lr.predict(Xtest)))
+		precision.append(precision_score(Ytest, lr.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, lr.predict(Xtest), beta=1))
 
-		def LogReg():
-			lr = LogisticRegression()
-			lr.fit(Xtrain, Ytrain)
-			accuracy.append(accuracy_score(Ytest, lr.predict(Xtest)))
-			precision.append(precision_score(Ytest, lr.predict(Xtest)))
-			fbeta.append(fbeta_score(Ytest, lr.predict(Xtest), beta=1))
-
-		self.parallel()
-		self.results()
-
-	def parallel(self):
+	def Classification(self):
 		Xtrain, Xtest, Ytrain, Ytest = self.Xtrain, self.Xtest, self.Ytrain, self.Ytest
 		classifiernames = self.classifiernames
-
-		svmthread = CThread(1, classifiernames[0], self.Classification().Support())
-		knthread = CThread(2, classifiernames[1], self.Classification().KNearest())
-		dtthread = CThread(3, classifiernames[2], self.Classification().DecisionTree())
-		rfthread = CThread(4, classifiernames[3], self.Classification().RandomForest())
-		adathread = CThread(5, classifiernames[4], self.Classification().Ada())
-		gnbthread = CThread(6, classifiernames[5], self.Classification().GNB())
-		lrthread = CThread(7, classifiernames[6], self.Classification().LogReg())
+		n = time.time()
+		svmthread = CThread(1, classifiernames[0], self.Support())
+		knthread = CThread(2, classifiernames[1], self.KNearest())
+		dtthread = CThread(3, classifiernames[2], self.DecisionTree())
+		rfthread = CThread(4, classifiernames[3], self.RandomForest())
+		adathread = CThread(5, classifiernames[4], self.Ada())
+		gnbthread = CThread(6, classifiernames[5], self.GNB())
+		lrthread = CThread(7, classifiernames[6], self.LogReg())
 
 		threads.append(svmthread)
 		threads.append(knthread)
@@ -128,7 +146,11 @@ class Modelrithm(object):
 			t.start()
 		for t in threads:
 			t.join()
+		p = time.time()
+		print('Time taken to run classifiers: ', p-n)
 		print("Exiting Main Thread...")
+
+		self.results()
 
 	def results(self):
 		accuracy = self.accuracy
@@ -138,21 +160,24 @@ class Modelrithm(object):
 		#accuracy.sort()
 		# mostaccurate = accuracy[0]
 		accuracy_dict = {"SVC":accuracy[0], "KNeighborsClassifier": accuracy[1], 'DecisionTreeClassifier':accuracy[2], 'RandomForestClassifier':accuracy[3], 'AdaBoostClassifier':accuracy[4], 'GaussianNB':accuracy[5], 'LogisticRegression':accuracy[6]}
-		plt.fig()
+		plt.figure()
 		plt.title("Accuracy per Classifier")
-		plt.plot(list(accuracy_dict.keys()), accuracy)
+		plt.xticks(np.arange(7), list(accuracy_dict.keys()))
+		plt.plot(accuracy)
 		plt.show()
 
 		precision_dict = {"SVC":precision[0], "KNeighborsClassifier": precision[1], 'DecisionTreeClassifier':precision[2], 'RandomForestClassifier':precision[3], 'AdaBoostClassifier':precision[4], 'GaussianNB':precision[5], 'LogisticRegression': precision[6]}
-		plt.fig()
+		plt.figure()
 		plt.title("Precision per Classifier")
-		plt.plot(list(precision_dict.keys()), precision)
+		plt.xticks(np.arange(7), list(precision_dict.keys()))
+		plt.plot(precision)
 		plt.show()
 
 		fbeta_dict = {"SVC": fbeta[0], "KNeighborsClassifier": fbeta[1], 'DecisionTreeClassifier':fbeta[2], 'RandomForestClassifier': fbeta[3], 'AdaBoostClassifier':fbeta[4], 'GaussianNB':fbeta[5], 'LogisticRegression':fbeta[6]}
-		plt.fig()
+		plt.figure()
 		plt.title("F-Beta per Classifier")
-		plt.plot(list(fbeta_dict.keys()), fbeta)
+		plt.xticks(np.arange(7), list(fbeta_dict.keys()))
+		plt.plot(fbeta)
 		plt.show()
 
 		print("*****")
