@@ -1,5 +1,5 @@
 # Modelrithm
-Python Framework that chooses the best ML algorithm for your data
+Python Framework that compares 7 different Machine Learning algorithms' accuracy, precision, and F-Beta scores efficiently (~0.15 second runtime) for a given user's training and testing data, and returns the highest scoring of each, along with automated hyperparameter optimization.
 
 # Installation
 pip install Modelrithm
@@ -12,7 +12,8 @@ pip install Modelrithm
 # Usage
 	from Modelrithm import Modelrithm
 
-	Modelrithm.Classification(X_test, Y_train, X_test, Y_train)
+	model = Modelrithm(X_test, Y_train, X_test, Y_train)
+	model.Classification()
 
 # Examples
 - Aided in increasing accuracy, precision, and f-beta score of a classification problem using satellite pictures of the earth and moon.
