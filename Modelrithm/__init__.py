@@ -4,9 +4,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import precision_score
-from sklearn.metrics import fbeta_score
+from sklearn.metrics import accuracy_score, precision_score, fbeta_score
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -31,47 +29,47 @@ class Modelrithm:
 		print("\n-------------------------------------------------------------------\n")
 		print("This may take a while, make yourself comfortable...\n")
 
-		alg1 = SVC()
-		alg1.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, alg1.predict(Xtest)))
-		precision.append(precision_score(Ytest, alg1.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, alg1.predict(Xtest), beta=1))
+		svc = SVC()
+		svc.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, svc.predict(Xtest)))
+		precision.append(precision_score(Ytest, svc.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, svc.predict(Xtest), beta=1))
 
-		alg2 = KNeighborsClassifier()
-		alg2.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, alg2.predict(Xtest)))
-		precision.append(precision_score(Ytest, alg2.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, alg2.predict(Xtest), beta=1))
+		knn = KNeighborsClassifier()
+		knn.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, knn.predict(Xtest)))
+		precision.append(precision_score(Ytest, knn.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, knn.predict(Xtest), beta=1))
 
-		alg3 = DecisionTreeClassifier()
-		alg3.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, alg3.predict(Xtest)))
-		precision.append(precision_score(Ytest, alg3.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, alg3.predict(Xtest), beta=1))
+		dt = DecisionTreeClassifier()
+		dt.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, dt.predict(Xtest)))
+		precision.append(precision_score(Ytest, dt.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, dt.predict(Xtest), beta=1))
 
-		alg4 = RandomForestClassifier()
-		alg4.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, alg4.predict(Xtest)))
-		precision.append(precision_score(Ytest, alg4.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, alg4.predict(Xtest), beta=1))
+		rf = RandomForestClassifier()
+		rf.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, rf.predict(Xtest)))
+		precision.append(precision_score(Ytest, rf.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, rf.predict(Xtest), beta=1))
 
-		alg5 = AdaBoostClassifier()
-		alg5.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, alg5.predict(Xtest)))
-		precision.append(precision_score(Ytest, alg5.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, alg5.predict(Xtest), beta=1))
+		adaboost = AdaBoostClassifier()
+		adaboost.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, adaboost.predict(Xtest)))
+		precision.append(precision_score(Ytest, adaboost.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, adaboost.predict(Xtest), beta=1))
 
-		alg6 = GaussianNB()
-		alg6.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, alg6.predict(Xtest)))
-		precision.append(precision_score(Ytest, alg6.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, alg6.predict(Xtest), beta=1))
+		gauss_nb = GaussianNB()
+		gauss_nb.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, gauss_nb.predict(Xtest)))
+		precision.append(precision_score(Ytest, gauss_nb.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, gauss_nb.predict(Xtest), beta=1))
 
-		alg7 = LogisticRegression()
-		alg7.fit(Xtrain, Ytrain)
-		accuracy.append(accuracy_score(Ytest, alg7.predict(Xtest)))
-		precision.append(precision_score(Ytest, alg7.predict(Xtest)))
-		fbeta.append(fbeta_score(Ytest, alg7.predict(Xtest), beta=1))
+		lr = LogisticRegression()
+		lr.fit(Xtrain, Ytrain)
+		accuracy.append(accuracy_score(Ytest, lr.predict(Xtest)))
+		precision.append(precision_score(Ytest, lr.predict(Xtest)))
+		fbeta.append(fbeta_score(Ytest, lr.predict(Xtest), beta=1))
 
 
 		plt.plot(accuracy)
