@@ -1,5 +1,5 @@
-from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso, ElasticNet, BayesianRidge, Perceptron, SGDRegressor
-from sklearn.svm import SVR, SVC
+# from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso, ElasticNet, BayesianRidge, Perceptron, SGDRegressor
+from sklearn.svm import SVC#, SVR
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
@@ -7,6 +7,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, precision_score, fbeta_score
 import matplotlib.pyplot as plt
 import numpy as np
+from classifier_threading import CThread
 
 class Modelrithm:
 
@@ -25,6 +26,14 @@ class Modelrithm:
 		print("Testing your data on the following models: {}".format(callclassifiers))
 		print("\n-------------------------------------------------------------------\n")
 		print("This may take a while, make yourself comfortable...\n")
+
+		svcthread = CThread(1, "SVC_Thread", 1)
+		knnthread = CThread(2, "KNN_Thread", 2)
+		dtthread = CThread(3, "DecisionTree_Thread", 3)
+		rfthread = CThread(4, "RandomForest_Thread", 4)
+		adathread = CThread(5, "Adaboost_Thread", 5)
+		gnbthread = CThread(6, "GaussianNB_Thread", 6)
+		lrthread = CThread(7, "LogReg_Thread", 7)
 
 		svc = SVC()
 		svc.fit(Xtrain, Ytrain)
