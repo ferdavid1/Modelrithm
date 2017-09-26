@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Modelrithm
 Python Framework that chooses the best ML algorithm for your data
 
