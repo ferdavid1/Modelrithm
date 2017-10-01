@@ -12,7 +12,6 @@ import numpy as np
 import threading
 import time
 
-exitFlag = 0
 class CThread(threading.Thread):
 
 	def __init__(self, threadID, name, function):
